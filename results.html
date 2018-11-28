@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="row text-center mt-3">
+	<div class="col-lg text-center">
+		{% if nucleases == '' %}
+			<h1>No PAM Targets for this sequence:</h1>
+		{% else %}
+			<h1>PAM Targets for nucleases {{ nucleases }}</h1>
+		{% endif %}
+		<p> {{ results }} </p>
+	</div>
+</div>
+{% endblock %}
