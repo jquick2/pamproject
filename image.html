@@ -4,16 +4,17 @@
 {% endblock %}
 
 {%block body%}
+
 <div class="row mt-3">
 	<div class="col-sm">
 	</div>
 	<div class="col-sm text-center">
 		<h1>Image Upload</h1>
-		<p>Upload Image for desired DNA sequence</p>
-		<form action="/results" method="post">
+		<p>Upload image for desired DNA sequence</p>
+		<form action="/results" method="post" enctype="multipart/form-data">
 			<div class="form-group">
 				<label for="selector">Desired Nuclease</label>
-				<select id="selector" name="selector">
+				<select id="selector" name="selector" onchange="myFunction()">
 	 		 		<option value="1">SpCas9 (NGG)</option>
 	 		 		<option value="2">SaCas9 (NGRRT)</option>
 	 		 		<option value="3">NmeCas9 (NNNNGATT)</option>
@@ -21,17 +22,55 @@
 	 		 		<option value="5">StCas6 (NNAGAAW)</option>
 	 		 		<option value="6">LbCpf1 (TTTV)</option>
 	 		 		<option value="7">AsCpf1 (TTTV)</option>
+	 		 		<option value="8">Engineered Nuclease</option>
 	 		 	</select>
 	 		</div>
+	 		<div class="form-group text-center">
+	 			<label for="Engineered_Nuclease_PAM" id="customLabel" style="display: none">Input Custom PAM:</label>
+	 			<input type="text" id="Engineered_Nuclease_PAM" name="Engineered_Nuclease_PAM" value="" style="display:none">
+	 		</div>
 	 		<div class="form-group">
-				<label for="sequence">Image to Upload</label>
+				<label for="sequence">Sequence to Check</label>
 				<input type="file" id="sequence" name="seqimg" accept=".jpg, .jpeg, .png">
 			</div>
-			<button type="submit" class="btn btn-primary">Find Targets</button>
+			<div class="form-group">
+				<label for="cut_start">Beginning of editing window (bp away from PAM)</label>
+				<input type="number" id="cut_start" name="cut_start" value="1" min="1">
+			</div>
+			<div class="form-group">
+				<label for="cut_end">End of editing window (bp away from PAM)</label>
+				<input type="number" id="cut_end" name="cut_end" value="1" min="1">
+			</div>
+			<div class="form-group">
+				<h5>Engineered Nuclease Directionality:</h5>
+				<input type="radio" name="prime" value="Five_Three"> Five_Three<br>
+				<input type="radio" name="prime" value="Three_Five"> Three_Five<br>
+				<input type="radio" name="prime" value="" checked="checked"> None: no custom PAM<br>
+			</div>
+
+			<button type="submit" class="btn btn-primary" style="background-color: #4cb7c5">Find Targets</button>
 
 		</form>
 	</div>
 	<div class="col-sm">
 	</div>
 </div>
+
+<script>
+function myFunction() {
+    var selectBox = document.getElementById("selector");
+    var text = document.getElementById("Engineered_Nuclease_PAM");
+    var label = document.getElementById("customLabel");
+    var customPam = document.getElementById("Engineered_Nuclease_PAM")
+    if (selectBox.value == 8){
+        text.style.display = "inline";
+        label.style.display = "inline";
+
+    } else {
+       text.style.display = "none";
+       label.style.display = "none";
+       customPam.value = "";
+    }
+}
+</script>
 {% endblock %}

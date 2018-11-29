@@ -1,14 +1,79 @@
 {% extends "layout.html" %}
 
+{% block head %}
+{% endblock %}
+
 {% block body %}
 <div class="row text-center mt-3">
 	<div class="col-lg text-center">
 		{% if nucleases == '' %}
 			<h1>No PAM Targets for this sequence:</h1>
 		{% else %}
-			<h1>PAM Targets for nucleases {{ nucleases }}</h1>
+			<h1>PAM Targets for nuclease {{ nucleases }}</h1>
+			<h4>Color Codes: Orange=PAMs, Yellow=Editing Window, Green=Editing Window with desired base included</h4>
+			<h4>Note: Entire sequence outputted for each PAM found</h4>
+			<button class="btn btn-primary mb-3" style="background-color:#4cb7c5" onclick="myFunction()">Show Key Areas of Interest</button>
+			{% for result in results %}
+				<div class="container" style="background-color: #dae7f1">
+					<p><strong>Target/Editing Window Found:</strong></p>
+					<p>
+					{% for c in result %}
+						{% if c == '[' %}
+							<span style="background-color: orange">{{ c }}
+						{% elif c == ']' %}
+							{{c}} </span>
+						{% else %}
+							{{c}}
+						{% endif %}
+					{% endfor %}
+					</p>
+				</div>
+			{% endfor %}
 		{% endif %}
-		<p> {{ results }} </p>
 	</div>
 </div>
+
+
+<script type="text/javascript">
+	function myFunction() {
+		console.log("Functioncalled");
+		var paragraphs = document.getElementsByTagName("p");
+
+
+		var elementCount = paragraphs.length;
+		for(i = 0; i < elementCount; i++) {
+			var textInput = paragraphs[i].innerHTML;
+
+			if (textInput.includes("{")){
+				console.log("in the first part")
+
+				var start = textInput.indexOf("{");
+				var end = textInput.indexOf("}");
+
+				console.log(end);
+
+				if (end > -1) {
+					var newString =  textInput.substring(start, end);
+					console.log(newString);
+
+					if (newString.includes("&lt;")){
+						paragraphs[i].innerHTML = textInput.substring(0, start) + "<span style='background-color: #63f157'>" + textInput.substring(start,end+1) + "</span>" + textInput.substring(end+1, textInput.length);
+						
+					}
+
+					else {
+						paragraphs[i].innerHTML = textInput.substring(0, start) + "<span style='background-color: yellow'>" + textInput.substring(start,end+1) + "</span>" + textInput.substring(end+1, textInput.length);					
+					}
+
+
+
+				}
+			}
+		}
+
+	}
+
+
+
+</script>
 {% endblock %}
